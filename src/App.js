@@ -1,37 +1,87 @@
-import React, { useState } from "react";
-import logo from "./logo.svg";
-import TaskList from "./TaskList";
-import "./App.css";
+import React, { Component } from "react";
+import CompletedTask from "./components/CompletedTask";
+import Todos from "./components/Todos";
 
-function App() {
-  const [tasks, addTask] = useState([]);
-
-  const addTasks = (event) => {
-    addTask([
-      ...tasks,
+export class App extends Component {
+  state = {
+    todos: [
       {
-        id: tasks.length,
-        value: event.target.value,
+        id: 1,
+        title: "Work 1",
+        isCompleted: false,
       },
-    ]);
-    console.log(tasks);
+      {
+        id: 2,
+        title: "Work 2",
+        isCompleted: false,
+      },
+      {
+        id: 3,
+        title: "Work 3",
+        isCompleted: false,
+      },
+      {
+        id: 4,
+        title: "Work 4",
+        isCompleted: false,
+      },
+      {
+        id: 5,
+        title: "Work 5",
+        isCompleted: false,
+      },
+    ],
+
+    completed: [
+      {
+        id: 6,
+        title: "waste Time",
+        isCompleted: true,
+      },
+    ],
   };
 
-  return (
-    <div className="App">
-      <div>
-        <input name="name" value={tasks.value} placeholder="Enter task" />
-        <button onClick={addTasks}>Add Task</button>
+  markUncomplete = (item) => {
+    this.setState({
+      todos: [...this.state.todos, item],
+      completed: [
+        ...this.state.completed.filter((todo) => todo.id !== item.id),
+      ],
+    });
+  };
+
+  markComplete = (item) => {
+    this.setState({
+      completed: [...this.state.completed, item],
+      todos: [...this.state.todos.filter((todo) => todo.id !== item.id)],
+    });
+  };
+
+  delTodo = (id) => {
+    this.setState({
+      todos: [...this.state.todos.filter((todo) => todo.id !== id)],
+    });
+    console.log("Delete ");
+  };
+  render() {
+    console.log("Rendered");
+    return (
+      <div style={{ display: "flex" }}>
+        <Todos
+          del={this.delTodo}
+          todos={this.state.todos}
+          markComplete={this.markComplete}
+        />
         <div>
-          <ul>
-            {tasks.map((task) => (
-              <li key={task.id}>{task.value}</li>
-            ))}
-          </ul>
+          This is COmpleted Tasks 
+          <CompletedTask
+            completed={this.state.completed}
+            markUncomplete={this.markUncomplete}
+          />
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 export default App;
